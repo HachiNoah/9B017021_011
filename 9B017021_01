@@ -1,0 +1,44 @@
+def get_even_squares(num_list):
+    e = [x * x for x in num_list if x % 2 == 0]
+    # 接收'num_list'，並返回該列表中所有偶數的平方組成的列表。
+
+    return e
+
+
+def get_odd_cubes(num_list):
+    o = []
+    for x in num_list:
+        if x % 2 == 0:
+            o.append(x * x * x)
+    # 接收'num_list'，並返回該列表所有偶數的利方組成的列表。
+    return o
+
+
+def get_sliced_list(num_list):
+    return num_list[4:]
+    # 返回了''num_list'中索引4到最後的所有元素。
+
+
+def format_numbers(numbers):
+    text = ",".join("%10s" % str(x) for x in numbers)
+    print(text)
+    # 接受一個列表'numbers'，將其內容格式化為一個逗號分隔的字串，並在每個數字前天家的空格以保持固定的寬度。
+    # 最後再將格式化後的字串印出。
+
+
+def main():
+    num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    even_squares = get_even_squares(num_list)
+    # print(even_squares)
+    odd_cubes = get_odd_cubes(num_list)
+    # print(odd_cubes)
+    slicing = get_sliced_list(num_list)
+    # print(slicing)
+
+    format_numbers(even_squares)
+    format_numbers(odd_cubes)
+    format_numbers(slicing)
+
+
+main()
