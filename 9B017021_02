@@ -1,0 +1,120 @@
+import os
+import json
+
+
+def system_text():
+    print("***************選單***************")
+    print("1. 查詢指定學號成績")
+    print("2. 新增指定學號的課程名稱與分數")
+    print("3. 顯示指定學號的各科平均分數")
+    print("4. 離開")
+    print("**********************************")
+
+
+def student_data_output(data):
+    print("=>學生資料: {")
+    print('  "name": "' + data["name"] + '",')
+    print('  "student_id": "' + data["student_id"] + '",')
+    print('  "courses": [')
+
+    for c in data["courses"]:
+        print("    {")
+        print('      "name": "' + c["name"] + '",')
+        print('      "score": ' + str(c["score"]))
+        if c == data["courses"][-1]:
+            print("    }")
+        else:
+            print("    },")
+
+
+def average(data):
+    sum = 0
+    total = 0
+    for temp in data["courses"]:
+        total += temp["score"]
+        sum += 1
+
+    return total / sum
+
+
+def main():
+
+    if os.path.isfile("students.json") == False:
+        print("students.json could not be found")
+        os._exit(-1)
+
+    file = open("students.json", "r", encoding="UTF-8")
+    data = json.load(file)
+    # print(data)
+    file.close()
+
+    while True:
+        system_text()
+        option = input("選擇操作項目：")
+        if option == "4":
+            print("=>程式結束")
+            break
+        elif option == "1":
+            studentID = input("請輸入學號: ")
+            ID = False
+            for temp in data:
+                if temp["student_id"] == studentID:
+                    ID = True
+                    student_data_output(temp)
+                    break
+
+            if not ID:
+                print("=>發生錯誤: 學號 " + studentID + " 找不到.")
+                continue
+        elif option == "2":
+            studentID = input("請輸入學號: ")
+            course = input("請輸入要新增課程的名稱:")
+            score = input("請輸入要新增課程的分數:")
+            ID = False
+            for temp in data:
+                if temp["student_id"] == studentID:
+                    ID = True
+                    break
+
+            if course == "" or score == "":
+                print("=>其它例外: 課程名稱或分數不可空白.")
+                continue
+            elif not ID:
+                print("=>發生錯誤: 學號 " + studentID + " 找不到.")
+                continue
+            else:
+                flag = True
+                for temp in data:
+                    if temp["student_id"] == studentID:
+                        for c in temp["courses"]:
+                            if c["name"] == course:
+                                print("=>已登入此課程成績")
+                                flag = False
+                                break
+                        if not flag:
+                            temp["courses"].append
+                            ({"name": course, "score": score})
+                        break
+                if flag:
+                    file = open("students.json", "w", encoding="UTF-8")
+                    json.dump(data, file)
+                    file.close()
+
+        elif option == "3":
+            studentID = input("請輸入學號: ")
+            ID = False
+            for temp in data:
+                if temp["student_id"] == studentID:
+                    ID = True
+                    print("=>各科平均分數: " + str(round(average(temp), 2)))
+                    break
+
+            if not ID:
+                print("=>發生錯誤: 學號 " + studentID + " 找不到.")
+                continue
+        else:
+            print("=>請輸入有效的選項。")
+            continue
+
+
+main()
